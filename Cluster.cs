@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GenericClustering.Entities;
 
 namespace GenericClustering;
-internal class Cluster<T> where T : struct
+
+public class Cluster<T> where T : struct
 {
-    public List<DataPoint<T>> DataPoints { get; }
-    public DataPoint<T> Centroid { get;  }
-    public double MeanDistance { get;  }
-    public double StandardDeviation { get; }
+    public List<DataPoint<T>> DataPoints { get; private set; }
+    public DataPoint<T> Centroid { get; private set; }
+    public double MeanDistance { get; private set; }
+    public double StandardDeviation { get; private set; }
     
     // Construct a new Cluster with a centroid and empty datapoints. 
     public Cluster(DataPoint<T> centroid)
@@ -27,7 +29,7 @@ internal class Cluster<T> where T : struct
     }
 
     // Uppdatera mittpunkten
-    protected void Update()
+    private void Update()
     {
         if (DataPoints.Count == 0)
             return;
@@ -44,9 +46,9 @@ internal class Cluster<T> where T : struct
         }
 
         // Calculate the new centroid.
-        var centroidCoordinates = totalCoordinates.Select(total => total / DataPoints.Count).ToList();
+        var centroidCoordinates = ConvertToT(totalCoordinates.Select(total => total / DataPoints.Count).ToArray());
 
-        Centroid = new DataPoint<List<double>>(centroidCoordinates);
+        Centroid = new DataPoint<T>(centroidCoordinates);
 
         // Calculate the distance to the centroid.
         List<double> distances = DataPoints.Select(point => Centroid.DistanceTo(point)).ToList();
@@ -58,6 +60,13 @@ internal class Cluster<T> where T : struct
         double sumOfSquaredDifferences = distances.Select(d => Math.Pow(d - MeanDistance, 2)).Sum();
         StandardDeviation = Math.Sqrt(sumOfSquaredDifferences / distances.Count);
     }
+
+    private T ConvertToT(double[] coordinates)
+    {
+        // Implementera logik för att omvandla double[] till T.
+        return (T)(object)coordinates;
+    }
+
 
     public void Add(DataPoint<T> point)
     {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GenericClustering.Entities;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace GenericClustering;
@@ -91,68 +92,3 @@ public class KMeans<T>(List<DataPoint<T>> dataPoints, int k) where T: struct
         return selectedPoints;
     }
 }
-
-/*
-public class KMeans<T>(List<DataPoint<T>> dataPoints) where T : DataPoint<T>
-{
-    private readonly List<DataPoint<T>> dataPoints = dataPoints ?? throw new ArgumentNullException(nameof(dataPoints));
-    private Cluster<T>[] clusters;
-    private List<DataPoint<T>>[] clusterPoints;
-    private bool hasChanged = true;
-
-
-    public void InitializeClusters(int k)
-    {
-        if (k < 2)
-            throw new ArgumentException("Less than 2 clusters.");
-
-        clusters = new Cluster<T>[k];
-        clusterPoints = new List<DataPoint<T>>[k];
-        DataPoint<T>[] centroids = SelectRandomPoints(dataPoints, k).ToArray();
-
-        // Initialize clusters with centroids
-        for (int i = 0; i < k; i++)
-            clusters[i] = new Cluster<T>(centroids[i]);
-    }
-
-    public void AssignDataToClusters()
-    {
-        for (int i = 0; i < k; i++)
-            clusterPoints[i] = new List<DataPoint<T>>();
-
-        foreach (var point in dataPoints)
-        {
-            int closestClusterId = clusters
-                .Select((cluster, index) => (index, distance: cluster.Centroid.DistanceTo(point)))
-                .MinBy(pair => pair.distance)
-                .index;
-
-            clusterPoints[closestClusterId].Add(point);
-        }
-    }
-
-    public void UpdateClusterCentroids()
-    {
-        hasChanged = false;
-
-
-    }
-
-    public bool HasConverged()
-    {
-        return !hasChanged;
-    }
-
-    public List<Cluster<T>> GetClusters()
-    {
-        return clusters.ToList();
-    }
-
-    private List<DataPoint<T>> SelectRandomPoints(List<DataPoint<T>> points, int k)
-    {
-        Random random = new Random();
-        List<DataPoint<T>> shuffledPoints = points.OrderBy(p => random.Next()).ToList();
-        return shuffledPoints.Take(k).ToList();
-    }
-}
-*/

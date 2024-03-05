@@ -1,6 +1,6 @@
-﻿namespace GenericClustering;
+﻿namespace GenericClustering.Entities;
 
-public class DataPoint<T> where T:  struct, IEnumerable<double> 
+public class DataPoint<T>
 {
     public T[] Coordinates { get; private set; }
 

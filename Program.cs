@@ -8,18 +8,18 @@ internal static class Program
 {
     public static void Main(string[] args)
     {
-        List<DataPoint<double>> dataPoints = ReadOrGeneratePoints();
+        List<IDataPoint<double>> dataPoints = ReadOrGeneratePoints();
 
         KMeans<double> kMeans = new KMeans<double>(dataPoints, 10);
 
     }
 
-    public static List<DataPoint<double>> ReadOrGeneratePoints()
+    public static List<IDataPoint<double>> ReadOrGeneratePoints()
     {
         // Ange sökvägen för den lokala filen
         string filePath = "euklidiska_punkter.txt";
 
-        List<DataPoint<double>> dataPoints = new List<DataPoint<double>>();
+        List<IDataPoint<double>> dataPoints = new List<IDataPoint<double>>();
 
         // Om filen redan finns, läs in punkterna från filen
         if (File.Exists(filePath))
@@ -28,7 +28,7 @@ internal static class Program
 
             using (StreamReader reader = new StreamReader(filePath))
             {
-                string? line;
+                string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     // Parsa varje rad för att extrahera x- och y-koordinater och skapa en punkt

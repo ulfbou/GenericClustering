@@ -7,11 +7,4 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-	<ItemGroup>
-		<Folder Include="Repositories\" />
-	</ItemGroup>
-
 </Project>

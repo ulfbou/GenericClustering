@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GenericClustering.Entities;
+using GenericClustering;
 
 namespace GenericClustering;
 
-public class Cluster<T> where T : struct
+internal class Cluster<T> where T : struct
 {
-    public List<DataPoint<T>> DataPoints { get; private set; }
-    public DataPoint<T> Centroid { get; private set; }
+    public List<IDataPoint<T>> DataPoints { get; private set; }
+    public IDataPoint<T> Centroid { get; private set; }
     public double MeanDistance { get; private set; }
     public double StandardDeviation { get; private set; }
     
     // Construct a new Cluster with a centroid and empty datapoints. 
-    public Cluster(DataPoint<T> centroid)
+    public Cluster(IDataPoint<T> centroid)
     {
-        DataPoints = new List<DataPoint<T>>();
+        DataPoints = new List<IDataPoint<T>>();
         Centroid = centroid ?? throw new ArgumentNullException(nameof(centroid));
     }
 
     // Construct a new Cluster from existing datapoints. Calculate the centroid from the datapoints. 
-    public Cluster(List<DataPoint<T>> dataPoints)
+    public Cluster(List<IDataPoint<T>> dataPoints)
     {
-        DataPoints = new List<DataPoint<T>>(dataPoints);
+        DataPoints = new List<IDataPoint<T>>(dataPoints);
         Centroid = new DataPoint<T>();
         
         Update();

@@ -3,6 +3,56 @@
 public static class DistanceFunctions<T>
 {
     /// <summary>
+    /// Calculates the Euclidean distance. 
+    /// </summary>
+    /// <param name="point1"></param>
+    /// <param name="point2"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">Thrown if the dimensions of the points differ.</exception>
+    public static double EuclideanDistance(T[] point1, T[] point2)
+    {
+        if (point1.Length != point2.Length)
+        {
+            throw new ArgumentException("Data points must have the same number of dimensions.");
+        }
+
+        double sumOfSquaredDifferences = 0;
+
+        for (int i = 0; i < point1.Length; i++)
+        {
+            double difference = (dynamic)point1[i] - point2[i];
+            sumOfSquaredDifferences += difference * difference;
+        }
+
+        return Math.Sqrt(sumOfSquaredDifferences);
+    }
+
+    /// <summary>
+    /// Calculates the Manhattan distance (taxi cab distance), which measure the absolute distance in each dimension.  
+    /// </summary>
+    /// <param name="point1"></param>
+    /// <param name="point2"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException">Thrown if the dimensions of the points differ.</exception>
+    public static double ManhattanDistance(double[] point1, double[] point2)
+    {
+        if (point1.Length != point2.Length)
+        {
+            throw new ArgumentException("Data points must have the same number of dimensions.");
+        }
+
+        double sumOfAbsoluteDifferences = 0;
+
+        for (int i = 0; i < point1.Length; i++)
+        {
+            double difference = (dynamic)point1[i] - point2[i];
+            sumOfAbsoluteDifferences += Math.Abs(difference);
+        }
+
+        return Math.Sqrt(sumOfAbsoluteDifferences);
+    }
+
+    /// <summary>
     /// Calculates the Chebshev distance between two vectors in a room, where the distance is the largest difference in each dimension. 
     /// </summary>
     /// <param name="point1"></param>
@@ -68,56 +118,6 @@ public static class DistanceFunctions<T>
         }
 
         return dotProduct / (norm1 * norm2);
-    }
-
-    /// <summary>
-    /// Calculates the Euclidean distance.  
-    /// </summary>
-    /// <param name="point1"></param>
-    /// <param name="point2"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException">Thrown if the dimensions of the points differ.</exception>
-    public static double EuclideanDistance(T[] point1, T[] point2)
-    {
-        if (point1.Length != point2.Length)
-        {
-            throw new ArgumentException("Data points must have the same number of dimensions.");
-        }
-
-        double sumOfSquaredDifferences = 0;
-
-        for (int i = 0; i < point1.Length; i++)
-        {
-            double difference = (dynamic)point1[i] - point2[i];
-            sumOfSquaredDifferences += difference * difference;
-        }
-
-        return Math.Sqrt(sumOfSquaredDifferences);
-    }
-
-    /// <summary>
-    /// Calculates the Manhattan distance (taxi cab distance), which measure the absolute distance in each dimension.  
-    /// </summary>
-    /// <param name="point1"></param>
-    /// <param name="point2"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException">Thrown if the dimensions of the points differ.</exception>
-    public static double ManhattanDistance(double[] point1, double[] point2)
-    {
-        if (point1.Length != point2.Length)
-        {
-            throw new ArgumentException("Data points must have the same number of dimensions.");
-        }
-
-        double sumOfAbsoluteDifferences = 0;
-
-        for (int i = 0; i < point1.Length; i++)
-        {
-            double difference = (dynamic)point1[i] - point2[i];
-            sumOfAbsoluteDifferences += Math.Abs(difference);
-        }
-
-        return Math.Sqrt(sumOfAbsoluteDifferences);
     }
 
     /// <summary>

@@ -26,7 +26,7 @@ internal class SilhouetteCalculator<T> where T : struct, IComparable<T>
     private readonly Dictionary<IDataPoint<T>, int> DataPointIndex; // A map between data points and their indice in the DataPoints array.
 
     /// <summary>
-    /// The constructor for the SilhouetteCalculate class. 
+    /// The constructor for the SilhouetteCalculate class.
     /// </summary>
     /// <param name="clusters">An IEnumerable of clusters that are to be evaluated.</param>
     public SilhouetteCalculator(IEnumerable<Cluster<T>> clusters)

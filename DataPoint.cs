@@ -1,4 +1,6 @@
-﻿namespace GenericClustering;
+﻿using GenericClustering.DistanceMetrics;
+
+namespace GenericClustering;
 
 /*
 

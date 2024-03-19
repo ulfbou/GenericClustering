@@ -1,6 +1,5 @@
 ﻿namespace GenericClustering.CoefficientCalculators;
 
-
 /*
 Använd IEnumerable istället för List i metoder: När det är möjligt, använd IEnumerable istället för List i metodsignaturer för att göra 
 koden mer flexibel och minska beroendet av specifika samlingstyper.

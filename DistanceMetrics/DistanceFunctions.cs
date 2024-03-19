@@ -1,4 +1,4 @@
-﻿namespace GenericClustering;
+﻿namespace GenericClustering.DistanceMetrics;
 
 public static class DistanceFunctions<T>
 {

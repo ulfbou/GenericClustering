@@ -1,38 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GenericClustering;
+﻿namespace GenericClustering;
 
-namespace GenericClustering;
-
-internal class Cluster<T> where T : struct
+/// <summary>
+/// Represents a cluster of data points in multidimensional space. 
+/// </summary>
+/// <typeparam name="T">The type of coordinates for the data points.</typeparam>
+internal class Cluster<T> where T : struct, IComparable<T>
 {
-    public List<IDataPoint<T>> DataPoints { get; private set; }
+    /// <summary>
+    /// Gets the list of data points which belongs to this cluster.
+    /// </summary>
+    private List<IDataPoint<T>> DataPoints { get; set; }
+
+    /// <summary>
+    /// Gets the centroid for this cluster. 
+    /// </summary>
     public IDataPoint<T> Centroid { get; private set; }
+
+    /// <summary>
+    /// Gets the mean distance from the data points to the centroid of this cluster.
+    /// </summary>
     public double MeanDistance { get; private set; }
+
+    /// <summary>
+    /// Gets the standard deviation of the distances from the data points to the centroid of this cluster.
+    /// </summary>
     public double StandardDeviation { get; private set; }
-    
-    // Construct a new Cluster with a centroid and empty datapoints. 
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="Cluster{T}"/> class with a specified centroid and empty data points. 
+    /// </summary>
+    /// <param name="centroid">The centroid of the cluster.</param>
     public Cluster(IDataPoint<T> centroid)
     {
         DataPoints = new List<IDataPoint<T>>();
         Centroid = centroid ?? throw new ArgumentNullException(nameof(centroid));
     }
 
-    // Construct a new Cluster from existing datapoints. Calculate the centroid from the datapoints. 
+    /// <summary>
+    /// Initializes a new instance of <see cref="Cluster{T}"/> class from existing data points and calculates the centroid.
+    /// </summary>
+    /// <param name="dataPoints">The list of data points.</param>
     public Cluster(List<IDataPoint<T>> dataPoints)
     {
         DataPoints = new List<IDataPoint<T>>(dataPoints);
         Centroid = new DataPoint<T>();
-        
+
         Update();
     }
 
-    // Uppdatera mittpunkten
+    /// <summary>
+    /// Updates the centroid and cluster statistics. 
+    /// </summary>
     private void Update()
     {
-        if (DataPoints.Count == 0)
+        if (DataPoints.Count() == 0)
+        {
             return;
+        }
 
         int dimensions = DataPoints[0].Coordinates.Length;
         double[] totalCoordinates = new double[dimensions];
@@ -41,89 +65,39 @@ internal class Cluster<T> where T : struct
         {
             for (int i = 0; i < dimensions; i++)
             {
-                totalCoordinates[i] += Convert.ToDouble(point.Coordinates[i]);
+                totalCoordinates[i] += (dynamic)point.Coordinates[i];
             }
         }
 
-        // Calculate the new centroid.
-        var centroidCoordinates = ConvertToT(totalCoordinates.Select(total => total / DataPoints.Count).ToArray());
+        // Calculates the new centroid.
+        var centroidCoordinates = (dynamic)(totalCoordinates.Select(total => total / DataPoints.Count).ToArray());
 
         Centroid = new DataPoint<T>(centroidCoordinates);
 
-        // Calculate the distance to the centroid.
-        List<double> distances = DataPoints.Select(point => Centroid.DistanceTo(point)).ToList();
+        // Calculate the distances to the centroid.
+        double[] distances = DataPoints.Select(dataPoint => Centroid.DistanceTo(dataPoint)).ToArray();
 
-        // Calculate the mean distance. 
-        MeanDistance = distances.Sum() / distances.Count;
+        // Calculate the mean average. 
+        MeanDistance = (distances.Sum() / distances.Length);
 
         // Calculate the standard deviation. 
         double sumOfSquaredDifferences = distances.Select(d => Math.Pow(d - MeanDistance, 2)).Sum();
-        StandardDeviation = Math.Sqrt(sumOfSquaredDifferences / distances.Count);
+        StandardDeviation = Math.Sqrt(sumOfSquaredDifferences / distances.Length);
     }
 
-    private T ConvertToT(double[] coordinates)
-    {
-        // Implementera logik för att omvandla double[] till T.
-        return (T)(object)coordinates;
-    }
-
-
-    public void Add(DataPoint<T> point)
-    {
-        DataPoints.Add(point);
-        Update();
-    }
-
-    public void Add(List<DataPoint<T>> dataPoints)
-    {
-        DataPoints.AddRange(dataPoints);
-        Update();
-    }
-
+    /// <summary>
+    /// Calculates the distance from the centroid to another data point.
+    /// </summary>
+    /// <param name="point">The other point to calculate the distance to.</param>
+    /// <returns>The distance between this cluster's centroid and the other data point.</returns>
     public double DistanceTo(DataPoint<T> point)
     {
         return Centroid.DistanceTo(point);
     }
+
+    /// <summary>
+    /// Gets all data points within this cluster.
+    /// </summary>
+    /// <returns>An IEnumerable of the data points.</returns>
+    public IEnumerable<IDataPoint<T>> GetAllDataPoints() => DataPoints;
 }
-
-/*
-public class KMeans<T> where T : DataPoint<T>
-{
-    private List<Cluster<T>> Clusters;
-    private List<DataPoint<T>> DataPoints;
-
-    public KMeans(List<DataPoint<T>> dataPoints)
-    {
-        DataPoints = dataPoints;
-        Clusters = new List<Cluster<T>>();
-    }
-
-    public void InitializeClusters(int k)
-    {
-        // Implementera initialiseringslogik för k kluster
-        // Exempelvis slumpmässig placering av centroider
-    }
-
-    public void AssignDataToClusters()
-    {
-        // Tilldela varje datapunkt till närmaste kluster
-        // Använd avståndsmått (t.ex. euklidiskt avstånd)
-    }
-
-    public void UpdateClusterCentroids()
-    {
-        // Uppdatera centroider för varje kluster
-    }
-
-    public bool HasConverged()
-    {
-        // Kontrollera om algoritmen har konvergerat
-        // Exempelvis genom att jämföra gamla och nya centroider
-    }
-
-    public List<Cluster<T>> GetClusters()
-    {
-        return Clusters;
-    }
-}
-*/

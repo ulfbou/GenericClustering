@@ -35,15 +35,19 @@ dataPoints.Add(new DataPoint<double>(3.0, 4.0));
 dataPoints.Add(new DataPoint<double>(5.0, 6.0));
 
 // Create an instance of KMeans. 
+
 int k = 2;
 
 // Initialize cluster
+
 KMeans<double> kmeans = new KMeans<double>(dataPoints, k);
 
 // Perform the cluster analysis
+
 kmeans.Run();
 
 // Fetch the resultat
+
 IEnumerable<Cluster<double>> clusters = kmeans.GetAllClusters();
 
 ### Important classes
